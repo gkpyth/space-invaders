@@ -1,6 +1,8 @@
 import pygame
 from settings import *
 
+from entities.player import Player
+
 class Game:
     def __init__(self, screen):
         self.screen = screen
@@ -15,12 +17,19 @@ class Game:
         self.alien_bullets = pygame.sprite.Group()
         self.shields = pygame.sprite.Group()
 
+        self.player = Player()
+        self.all_sprites.add(self.player)
+
 
     def handle_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    self.player.shoot()
 
 
     def update(self):
