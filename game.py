@@ -4,6 +4,8 @@ from settings import *
 from entities.player import Player
 from entities.bullet import Bullet
 
+from managers.wave_manager import WaveManager
+
 class Game:
     def __init__(self, screen):
         self.screen = screen
@@ -20,6 +22,12 @@ class Game:
 
         self.player = Player()
         self.all_sprites.add(self.player)
+
+        self.wave_manager = WaveManager(
+            self.aliens,
+            self.alien_bullets,
+            self.all_sprites
+        )
 
 
     def handle_events(self):
@@ -43,6 +51,7 @@ class Game:
 
     def update(self):
         self.all_sprites.update()
+        self.wave_manager.update()
 
 
     def draw(self):
