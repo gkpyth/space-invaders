@@ -2,6 +2,7 @@ import pygame
 from settings import *
 
 from entities.player import Player
+from entities.bullet import Bullet
 
 class Game:
     def __init__(self, screen):
@@ -29,7 +30,15 @@ class Game:
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    self.player.shoot()
+                    if self.player.shoot():
+                        bullet = Bullet(
+                            self.player.rect.centerx,
+                            self.player.rect.top,
+                            direction = -1,
+                            color = YELLOW
+                        )
+                        self.player_bullets.add(bullet)
+                        self.all_sprites.add(bullet)
 
 
     def update(self):
