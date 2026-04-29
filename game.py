@@ -29,6 +29,8 @@ class Game:
             self.all_sprites
         )
 
+        self.score = 0
+
 
     def handle_events(self):
         for event in pygame.event.get():
@@ -52,9 +54,33 @@ class Game:
     def update(self):
         self.all_sprites.update()
         self.wave_manager.update()
+        self._check_collisions()
 
 
     def draw(self):
         self.screen.fill(BLACK)
         self.all_sprites.draw(self.screen)
         pygame.display.flip()
+
+
+    def _check_collisions(self):
+        # Player bullets hit aliens
+        hits = pygame.sprite.groupcollide(
+            self.aliens,
+            self.player_bullets,
+            True,       # True = kill alien on hit
+            True        # True = kill bullet on hit
+        )
+        for alien in hits:
+            self.score += alien.points
+
+        # Alien bullets hit player
+        if pygame.sprite.spritecollide(self.player, self.alien_bullets, True):
+            self.player.lives -= 1
+            if self.player.lives <= 0:
+                self.state = "game_over"
+
+        # Aliens reach the player
+        for alien in self.aliens:
+            if alien.rect.bottom >= self.player.rect.top:
+                self.state = "game_over"
