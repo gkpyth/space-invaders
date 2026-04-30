@@ -6,6 +6,8 @@ from entities.bullet import Bullet
 
 from managers.wave_manager import WaveManager
 
+from ui.hud import HUD
+
 class Game:
     def __init__(self, screen):
         self.screen = screen
@@ -31,6 +33,8 @@ class Game:
 
         self.score = 0
 
+        self.hud = HUD(screen)
+
 
     def handle_events(self):
         for event in pygame.event.get():
@@ -50,6 +54,9 @@ class Game:
                         self.player_bullets.add(bullet)
                         self.all_sprites.add(bullet)
 
+                if event.key == pygame.K_r and self.state != "playing":
+                    self.__init__(self.screen)
+
 
     def update(self):
         self.all_sprites.update()
@@ -60,6 +67,7 @@ class Game:
     def draw(self):
         self.screen.fill(BLACK)
         self.all_sprites.draw(self.screen)
+        self.hud.draw(self.score, self.player.lives, self.state)
         pygame.display.flip()
 
 
@@ -84,3 +92,6 @@ class Game:
         for alien in self.aliens:
             if alien.rect.bottom >= self.player.rect.top:
                 self.state = "game_over"
+
+        if len(self.aliens) == 0:
+            self.state = "win"
