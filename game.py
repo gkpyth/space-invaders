@@ -46,7 +46,7 @@ class Game:
                 quit()
 
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
+                if event.key == pygame.K_SPACE and self.state == "playing":
                     if self.player.shoot():
                         bullet = Bullet(
                             self.player.rect.centerx,
@@ -62,6 +62,8 @@ class Game:
 
 
     def update(self):
+        if self.state != "playing":
+            return
         self.all_sprites.update()
         self.wave_manager.update()
         self._check_collisions()
