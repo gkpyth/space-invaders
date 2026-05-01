@@ -5,6 +5,7 @@ from entities.player import Player
 from entities.bullet import Bullet
 from entities.shield import create_shield
 from entities.starfield import Starfield
+from entities.explosion import Explosion
 
 from managers.wave_manager import WaveManager
 
@@ -91,6 +92,8 @@ class Game:
         )
         for alien in hits:
             self.score += alien.points
+            explosion = Explosion(alien.rect.centerx, alien.rect.centery)
+            self.all_sprites.add(explosion)
 
         # Alien bullets hit player
         if pygame.sprite.spritecollide(self.player, self.alien_bullets, True):
