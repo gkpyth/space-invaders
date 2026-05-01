@@ -108,6 +108,11 @@ class Game:
         for block in hits:
             block.hit()
 
+        # Aliens destroy shields on contact
+        hits = pygame.sprite.groupcollide(self.shields, self.aliens, False, False)
+        for block in hits:
+            block.hit()
+
         # Game won condition
         if len(self.aliens) == 0:
             self.state = "win"
