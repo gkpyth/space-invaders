@@ -97,15 +97,12 @@ class Game:
                 self.state = "game_over"
 
         # Player bullets hit shields
-        pygame.sprite.groupcollide(self.shields, self.player_bullets, False, True, pygame.sprite.collide_rect)
-
-        # Alien bullets hit shields
-        hits = pygame.sprite.groupcollide(self.shields, self.alien_bullets, False, True)
+        hits = pygame.sprite.groupcollide(self.shields, self.player_bullets, False, True)
         for block in hits:
             block.hit()
 
-        # Player bullets damage shields too
-        hits = pygame.sprite.groupcollide(self.shields, self.player_bullets, False, True)
+        # Alien bullets hit shields
+        hits = pygame.sprite.groupcollide(self.shields, self.alien_bullets, False, True)
         for block in hits:
             block.hit()
 
