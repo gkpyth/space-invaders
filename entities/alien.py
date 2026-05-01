@@ -10,10 +10,8 @@ class Alien(pygame.sprite.Sprite):
         self.alien_type = self._get_type()
         self.points = SCORE_PER_ALIEN[self.alien_type]
 
-        # TODO: Replace with actual alien sprite
-        # Placeholder visual for now - color coded by row
-        self.image = pygame.Surface((40,30))
-        self.image.fill(self._get_color())
+        raw = pygame.image.load(ALIEN_SPRITES[self.alien_type]).convert_alpha()
+        self.image = pygame.transform.scale(raw, (58, 48))
 
         self.rect = self.image.get_rect()
 

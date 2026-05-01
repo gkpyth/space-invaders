@@ -5,10 +5,8 @@ class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
 
-        # TODO: Replace placeholder with actual player sprite
-        # Placeholder visual for now - simple rectangle
-        self.image = pygame.Surface((50,30))
-        self.image.fill(GREEN)
+        raw = pygame.image.load(PLAYER_SPRITE).convert_alpha()
+        self.image = pygame.transform.scale(raw, (60, 60))
 
         self.rect = self.image.get_rect()
         self.rect.centerx = SCREEN_WIDTH // 2

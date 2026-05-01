@@ -44,3 +44,12 @@ SCORE_PER_ALIEN = {
     "middle": 20,
     "bottom": 10,
 }
+
+# --- Assets ---
+PLAYER_SPRITE = "assets/images/player_spaceship.png"
+ALIEN_SPRITES = {
+    "bottom": "assets/images/alien_spaceship_1.png",
+    "middle": "assets/images/alien_spaceship_2.png",
+    "top": "assets/images/alien_spaceship_3.png",
+}
+EXPLOSION_SPRITE = "assets/images/explosion.png"
