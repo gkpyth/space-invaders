@@ -97,7 +97,7 @@ class Game:
 
         # Alien bullets hit player
         if pygame.sprite.spritecollide(self.player, self.alien_bullets, True):
-            self.player.lives -= 1
+            self.player.take_hit()
             if self.player.lives <= 0:
                 self.state = "game_over"
 

@@ -17,10 +17,16 @@ class Player(pygame.sprite.Sprite):
         self.can_shoot = True
         self.shoot_cooldown = 0
 
+        self.hit_flash = False
+        self.flash_timer = 0
+        self.flash_duration = 40    # 40 frames
+        self.original_image = self.image.copy()
+
 
     def update(self):
         self._move()
         self._handle_cooldown()
+        self._handle_flash()
 
 
     def _move(self):
@@ -44,3 +50,24 @@ class Player(pygame.sprite.Sprite):
             self.shoot_cooldown = 20
             return True
         return False
+
+
+    def _handle_flash(self):
+        if self.hit_flash:
+            self.flash_timer += 1
+            # Alternate visibility every 5 frames for the flicker effect
+            if self.flash_timer % 5 == 0:
+                if self.image.get_alpha() == 255:
+                    self.image.set_alpha(50)
+                else:
+                    self.image.set_alpha(255)
+            if self.flash_timer >= self.flash_duration:
+                self.hit_flash = False
+                self.flash_timer = 0
+                self.image.set_alpha(255)
+
+
+    def take_hit(self):
+        self.lives -= 1
+        self.hit_flash = True
+        self.flash_timer =0
