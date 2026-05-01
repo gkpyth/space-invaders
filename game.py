@@ -11,12 +11,14 @@ from managers.wave_manager import WaveManager
 from managers.sound_manager import SoundManager
 
 from ui.hud import HUD
+from ui.menu import MenuScreen
 
 class Game:
     def __init__(self, screen):
         self.screen = screen
         self.running = True
-        self.state = "playing"      # "menu", "playing", "game_over", "win"
+        self.state = "menu"      # "menu", "playing", "game_over", "win"
+        self.menu = MenuScreen(screen)
 
         # TODO: Replace placeholders with actual groups as I build them.
         # Placeholders for now:
@@ -53,6 +55,12 @@ class Game:
                 quit()
 
             if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN and self.state == "menu":
+                    self.state = "playing"
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    quit()
+
                 if event.key == pygame.K_SPACE and self.state == "playing":
                     if self.player.shoot():
                         self.sound_manager.play("shoot")
@@ -70,9 +78,14 @@ class Game:
 
 
     def update(self):
-        self.starfield.update()
+        if self.state == "menu":
+            self.menu.update()
+            return
+
         if self.state != "playing":
             return
+
+        self.starfield.update()
         self.all_sprites.update()
         self.wave_manager.update()
         self._check_collisions()
@@ -80,6 +93,12 @@ class Game:
 
     def draw(self):
         self.screen.fill(BLACK)
+
+        if self.state == "menu":
+            self.menu.draw()
+            pygame.display.flip()
+            return
+
         self.starfield.draw(self.screen)
         self.all_sprites.draw(self.screen)
         self.hud.draw(self.score, self.player.lives, self.state)
