@@ -19,3 +19,6 @@ dist/
 
 # Private
 *.txt
+
+# License-protected
+music.mp3

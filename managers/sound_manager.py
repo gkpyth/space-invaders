@@ -5,6 +5,7 @@ class SoundManager:
     def __init__(self):
         pygame.mixer.init()
 
+        # Sound Effects
         self.sounds = {
             "shoot": pygame.mixer.Sound(SOUND_SHOOT),
             "explosion": pygame.mixer.Sound(SOUND_EXPLOSION),
@@ -12,6 +13,11 @@ class SoundManager:
             "game_over": pygame.mixer.Sound(SOUND_GAME_OVER),
             "level_complete": pygame.mixer.Sound(SOUND_LEVEL_COMPLETE),
         }
+
+        # Background Music
+        pygame.mixer.music.load(SOUND_MUSIC)
+        pygame.mixer.music.set_volume(0.3)
+        pygame.mixer.music.play(-1)     # -1 loops indefinitely
 
         # Adjust volumes individually
         self.sounds["shoot"].set_volume(0.2)
