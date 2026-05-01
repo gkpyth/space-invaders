@@ -3,6 +3,7 @@ from settings import *
 
 from entities.player import Player
 from entities.bullet import Bullet
+from entities.shield import create_shield
 
 from managers.wave_manager import WaveManager
 
@@ -30,6 +31,8 @@ class Game:
             self.alien_bullets,
             self.all_sprites
         )
+
+        self._spawn_shields()
 
         self.score = 0
 
@@ -93,5 +96,28 @@ class Game:
             if alien.rect.bottom >= self.player.rect.top:
                 self.state = "game_over"
 
+        # Player bullets hit shields
+        pygame.sprite.groupcollide(self.shields, self.player_bullets, False, True, pygame.sprite.collide_rect)
+
+        # Alien bullets hit shields
+        hits = pygame.sprite.groupcollide(self.shields, self.alien_bullets, False, True)
+        for block in hits:
+            block.hit()
+
+        # Player bullets damage shields too
+        hits = pygame.sprite.groupcollide(self.shields, self.player_bullets, False, True)
+        for block in hits:
+            block.hit()
+
+        # Game won condition
         if len(self.aliens) == 0:
             self.state = "win"
+
+
+    def _spawn_shields(self):
+        shield_y = SCREEN_HEIGHT - 160
+        total_width = 100       # approximate shield width
+        spacing = SCREEN_WIDTH // (SHIELD_COUNT + 1)
+        for i in range(SHIELD_COUNT):
+            x = spacing * (i + 1) - total_width // 2
+            create_shield(x, shield_y, self.shields, self.all_sprites)
