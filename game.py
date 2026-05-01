@@ -8,6 +8,7 @@ from entities.starfield import Starfield
 from entities.explosion import Explosion
 
 from managers.wave_manager import WaveManager
+from managers.sound_manager import SoundManager
 
 from ui.hud import HUD
 
@@ -42,6 +43,8 @@ class Game:
 
         self.starfield = Starfield()
 
+        self.sound_manager = SoundManager()
+
 
     def handle_events(self):
         for event in pygame.event.get():
@@ -52,6 +55,7 @@ class Game:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE and self.state == "playing":
                     if self.player.shoot():
+                        self.sound_manager.play("shoot")
                         bullet = Bullet(
                             self.player.rect.centerx,
                             self.player.rect.top,
@@ -92,13 +96,16 @@ class Game:
         )
         for alien in hits:
             self.score += alien.points
+            self.sound_manager.play("explosion")
             explosion = Explosion(alien.rect.centerx, alien.rect.centery)
             self.all_sprites.add(explosion)
 
         # Alien bullets hit player
         if pygame.sprite.spritecollide(self.player, self.alien_bullets, True):
+            self.sound_manager.play("player_hit")
             self.player.take_hit()
             if self.player.lives <= 0:
+                self.sound_manager.play("game_over")
                 self.state = "game_over"
 
         # Aliens reach the player
@@ -123,6 +130,7 @@ class Game:
 
         # Game won condition
         if len(self.aliens) == 0:
+            self.sound_manager.play("level_complete")
             self.state = "win"
 
 

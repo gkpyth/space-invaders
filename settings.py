@@ -53,3 +53,10 @@ ALIEN_SPRITES = {
     "top": "assets/images/alien_spaceship_3.png",
 }
 EXPLOSION_SPRITE = "assets/images/explosion.png"
+
+# --- Sounds ---
+SOUND_SHOOT = "assets/sounds/shoot.wav"
+SOUND_EXPLOSION = "assets/sounds/explosion.wav"
+SOUND_PLAYER_HIT = "assets/sounds/player_hit.wav"
+SOUND_GAME_OVER = "assets/sounds/game_over.wav"
+SOUND_LEVEL_COMPLETE = "assets/sounds/level_complete.wav"
