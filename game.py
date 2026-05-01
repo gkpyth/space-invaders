@@ -4,6 +4,7 @@ from settings import *
 from entities.player import Player
 from entities.bullet import Bullet
 from entities.shield import create_shield
+from entities.starfield import Starfield
 
 from managers.wave_manager import WaveManager
 
@@ -38,6 +39,8 @@ class Game:
 
         self.hud = HUD(screen)
 
+        self.starfield = Starfield()
+
 
     def handle_events(self):
         for event in pygame.event.get():
@@ -62,6 +65,7 @@ class Game:
 
 
     def update(self):
+        self.starfield.update()
         if self.state != "playing":
             return
         self.all_sprites.update()
@@ -71,6 +75,7 @@ class Game:
 
     def draw(self):
         self.screen.fill(BLACK)
+        self.starfield.draw(self.screen)
         self.all_sprites.draw(self.screen)
         self.hud.draw(self.score, self.player.lives, self.state)
         pygame.display.flip()
