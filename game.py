@@ -9,6 +9,7 @@ from entities.explosion import Explosion
 
 from managers.wave_manager import WaveManager
 from managers.sound_manager import SoundManager
+from managers.score_manager import ScoreManager
 
 from ui.hud import HUD
 from ui.menu import MenuScreen
@@ -46,6 +47,8 @@ class Game:
         self.starfield = Starfield()
 
         self.sound_manager = SoundManager()
+
+        self.score_manager = ScoreManager()
 
 
     def handle_events(self):
@@ -101,7 +104,7 @@ class Game:
 
         self.starfield.draw(self.screen)
         self.all_sprites.draw(self.screen)
-        self.hud.draw(self.score, self.player.lives, self.state)
+        self.hud.draw(self.score, self.player.lives, self.state, self.score_manager.high_score)
         pygame.display.flip()
 
 
@@ -125,6 +128,7 @@ class Game:
             self.player.take_hit()
             if self.player.lives <= 0:
                 self.sound_manager.play("game_over")
+                self.score_manager.save(self.score)
                 self.state = "game_over"
 
         # Aliens reach the player
@@ -150,6 +154,7 @@ class Game:
         # Game won condition
         if len(self.aliens) == 0:
             self.sound_manager.play("level_complete")
+            self.score_manager.save(self.score)
             self.state = "win"
 
 
