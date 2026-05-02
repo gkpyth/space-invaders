@@ -21,7 +21,7 @@ dist/
 data/
 
 # Private
-*.txt
+*_private.txt
 
 # License-protected
 music.mp3
