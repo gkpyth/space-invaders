@@ -17,38 +17,47 @@ from ui.menu import MenuScreen
 class Game:
     def __init__(self, screen):
         self.screen = screen
-        self.running = True
-        self.state = "menu"      # "menu", "playing", "game_over", "win"
-        self.menu = MenuScreen(screen)
+        self.state = "menu"      # "menu", "playing", "level_complete", "dropping", "warping",  "game_over", "win"
+        self.level = 1
 
-        # TODO: Replace placeholders with actual groups as I build them.
-        # Placeholders for now:
+        # Menu
+        self.menu = MenuScreen(self.screen)
+
+        # Sprite groups
         self.all_sprites = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
         self.player_bullets = pygame.sprite.Group()
         self.alien_bullets = pygame.sprite.Group()
         self.shields = pygame.sprite.Group()
+        self.explosions = pygame.sprite.Group()
 
+        # Entities
         self.player = Player()
         self.all_sprites.add(self.player)
 
-        self.wave_manager = WaveManager(
-            self.aliens,
-            self.alien_bullets,
-            self.all_sprites
-        )
-
-        self._spawn_shields()
-
-        self.score = 0
-
+        # Managers
+        self.wave_manager = WaveManager(self.aliens,self.alien_bullets,self.all_sprites)
+        self.sound_manager = SoundManager()
+        self.score_manager = ScoreManager()
+        self.starfield = Starfield()
         self.hud = HUD(screen)
 
-        self.starfield = Starfield()
+        # Game state
+        self.score = 0
+        self.warp_timer = 0
+        self.level_complete_timer = 0
 
-        self.sound_manager = SoundManager()
+        # Shield
+        self._spawn_shields()
 
-        self.score_manager = ScoreManager()
+
+    def _spawn_shields(self):
+        shield_y = SCREEN_HEIGHT - 160
+        total_width = 100       # approximate shield width
+        spacing = SCREEN_WIDTH // (SHIELD_COUNT + 1)
+        for i in range(SHIELD_COUNT):
+            x = spacing * (i + 1) - total_width // 2
+            create_shield(x, shield_y, self.shields, self.all_sprites)
 
 
     def handle_events(self):
@@ -76,36 +85,70 @@ class Game:
                         self.player_bullets.add(bullet)
                         self.all_sprites.add(bullet)
 
-                if event.key == pygame.K_r and self.state != "playing":
+                if event.key == pygame.K_r and self.state in ("game_over", "win"):
                     self.__init__(self.screen)
 
 
     def update(self):
+        self.starfield.update()
+
         if self.state == "menu":
-            self.menu.update()
+            return
+
+        if self.state == "level_complete":
+            self.level_complete_timer += 1
+            self.explosions.update()        # keeps fading after last alien killed; without it, last alien's explosion remains on screen throughout the travel animation
+            if self.level_complete_timer >= 90:     # 90 frames = ~1.5 seconds
+                self._start_warp()
+            return
+
+        if self.state == "warping":
+            self.warp_timer += 1
+            self.explosions.update()        # keeps fading after last alien killed
+            # Ship races upward
+            self.player.rect.y -= 6
+            if self.warp_timer >= WARP_DURATION:
+                self._start_next_level()
+            return
+
+        if self.state == "dropping":
+            self.wave_manager.update()
+            if not self.wave_manager.dropping:
+                self.state = "playing"
             return
 
         if self.state != "playing":
             return
 
-        self.starfield.update()
         self.all_sprites.update()
         self.wave_manager.update()
         self._check_collisions()
 
 
-    def draw(self):
-        self.screen.fill(BLACK)
+    def _start_warp(self):
+        self.state = "warping"
+        self.warp_timer = 0
+        self.starfield.set_warp(True)
+        # Kill all shields and bullets
+        for sprite in self.shields.sprites():
+            sprite.kill()
+        for sprite in self.alien_bullets.sprites():
+            sprite.kill()
+        for sprite in self.player_bullets.sprites():
+            sprite.kill()
 
-        if self.state == "menu":
-            self.menu.draw()
-            pygame.display.flip()
-            return
 
-        self.starfield.draw(self.screen)
-        self.all_sprites.draw(self.screen)
-        self.hud.draw(self.score, self.player.lives, self.state, self.score_manager.high_score)
-        pygame.display.flip()
+    def _start_next_level(self):
+        self.starfield.set_warp(False)
+        self.level += 1
+        # Reset player position
+        self.player.rect.centerx = SCREEN_WIDTH // 2
+        self.player.rect.bottom = SCREEN_HEIGHT - 20
+        # Spawn new wave in drop-in mode
+        self.wave_manager.next_level(self.level)
+        # Respawn shields
+        self._spawn_shields()
+        self.state = "dropping"
 
 
     def _check_collisions(self):
@@ -121,20 +164,8 @@ class Game:
             self.sound_manager.play("explosion")
             explosion = Explosion(alien.rect.centerx, alien.rect.centery)
             self.all_sprites.add(explosion)
-
-        # Alien bullets hit player
-        if pygame.sprite.spritecollide(self.player, self.alien_bullets, True):
-            self.sound_manager.play("player_hit")
-            self.player.take_hit()
-            if self.player.lives <= 0:
-                self.sound_manager.play("game_over")
-                self.score_manager.save(self.score)
-                self.state = "game_over"
-
-        # Aliens reach the player
-        for alien in self.aliens:
-            if alien.rect.bottom >= self.player.rect.top:
-                self.state = "game_over"
+            self.explosions.add(explosion)
+            self.wave_manager.on_alien_killed()     # fix for increase speed per alien killed logic - updating speed the moment alien dies
 
         # Player bullets hit shields
         hits = pygame.sprite.groupcollide(self.shields, self.player_bullets, False, True)
@@ -151,17 +182,54 @@ class Game:
         for block in hits:
             block.hit()
 
-        # Game won condition
+        # Alien bullets hit player
+        if pygame.sprite.spritecollide(self.player, self.alien_bullets, True):
+            self.sound_manager.play("player_hit")
+            self.player.take_hit()
+            if self.player.lives <= 0:
+                self.sound_manager.play("game_over")
+                self.score_manager.save(self.score)
+                self.state = "game_over"
+
+        # Aliens reach the player
+        for alien in self.aliens:
+            if alien.rect.bottom >= self.player.rect.top:
+                self.sound_manager.play("game_over")
+                self.score_manager.save(self.score)
+                self.state = "game_over"
+
+        # All aliens cleared
         if len(self.aliens) == 0:
-            self.sound_manager.play("level_complete")
             self.score_manager.save(self.score)
-            self.state = "win"
+            for sprite in self.alien_bullets.sprites():
+                sprite.kill()
+            for sprite in self.player_bullets.sprites():
+                sprite.kill()
+            if self.level >= TOTAL_LEVELS:
+                self.sound_manager.play("level_complete")
+                self.state = "win"
+            else:
+                self.sound_manager.play("level_complete")
+                self.level_complete_timer = 0
+                self.state = "level_complete"
 
 
-    def _spawn_shields(self):
-        shield_y = SCREEN_HEIGHT - 160
-        total_width = 100       # approximate shield width
-        spacing = SCREEN_WIDTH // (SHIELD_COUNT + 1)
-        for i in range(SHIELD_COUNT):
-            x = spacing * (i + 1) - total_width // 2
-            create_shield(x, shield_y, self.shields, self.all_sprites)
+    def draw(self):
+        self.screen.fill(BLACK)
+        self.starfield.draw(self.screen)
+
+        if self.state == "menu":
+            self.menu.update()
+            self.menu.draw()
+            pygame.display.flip()
+            return
+
+        self.all_sprites.draw(self.screen)
+        self.hud.draw(self.score, self.player.lives, self.state, self.score_manager.high_score, self.level)
+        pygame.display.flip()
+
+
+
+
+
+

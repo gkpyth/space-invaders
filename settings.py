@@ -61,3 +61,13 @@ SOUND_PLAYER_HIT = "assets/sounds/player_hit.wav"
 SOUND_GAME_OVER = "assets/sounds/game_over.wav"
 SOUND_LEVEL_COMPLETE = "assets/sounds/level_complete.wav"
 SOUND_MUSIC = "assets/sounds/music.mp3"
+
+# --- Levels ---
+LEVELS = {
+    1: {"alien_speed": 1,   "shoot_interval": 60, "alien_bullet_speed": 5},
+    2: {"alien_speed": 1.5, "shoot_interval": 45, "alien_bullet_speed": 6},
+    3: {"alien_speed": 2,   "shoot_interval": 30, "alien_bullet_speed": 7},
+}
+TOTAL_LEVELS = 3
+WARP_DURATION = 120
+DROP_DELAY = 40
