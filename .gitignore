@@ -23,5 +23,6 @@ data/
 # Private
 *_private.txt
 
-# License-protected
-music.mp3
+# Licensed music - not for distribution
+assets/sounds/music.mp3
+assets/sounds/music.ogg
