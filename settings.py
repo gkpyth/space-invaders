@@ -57,12 +57,12 @@ ALIEN_SPRITES = {
 EXPLOSION_SPRITE = "assets/images/explosion.png"
 
 # --- Sounds ---
-SOUND_SHOOT = "assets/sounds/shoot.oog"
-SOUND_EXPLOSION = "assets/sounds/explosion.oog"
-SOUND_PLAYER_HIT = "assets/sounds/player_hit.oog"
-SOUND_GAME_OVER = "assets/sounds/game_over.oog"
-SOUND_LEVEL_COMPLETE = "assets/sounds/level_complete.oog"
-SOUND_MUSIC = "assets/sounds/music.oog"
+SOUND_SHOOT = "assets/sounds/shoot.ogg"
+SOUND_EXPLOSION = "assets/sounds/explosion.ogg"
+SOUND_PLAYER_HIT = "assets/sounds/player_hit.ogg"
+SOUND_GAME_OVER = "assets/sounds/game_over.ogg"
+SOUND_LEVEL_COMPLETE = "assets/sounds/level_complete.ogg"
+SOUND_MUSIC = "assets/sounds/music.ogg"
 
 # --- Levels ---
 LEVELS = {
