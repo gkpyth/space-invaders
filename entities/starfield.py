@@ -7,7 +7,7 @@ class Starfield:
         self.stars = []
         self.warp_mode = False
         self.warp_intensity = 0     # 0 to 1, ramps up during warp
-        for _ in range (150):
+        for _ in range(150):
             self._add_star()
 
     def _add_star(self, y=None):

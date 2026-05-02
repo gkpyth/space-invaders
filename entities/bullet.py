@@ -13,10 +13,8 @@ class Bullet(pygame.sprite.Sprite):
         self.rect.y = y
 
         self.direction = direction      # -1 = up (player bullet) | 1 = down (alien bullet)
-        if speed is not None:
-            self.speed = speed
-        else:
-            self.speed = PLAYER_BULLET_SPEED if direction == -1 else ALIEN_BULLET_SPEED
+
+        self.speed = speed if speed is not None else (PLAYER_BULLET_SPEED if direction == -1 else ALIEN_BULLET_SPEED)
 
 
     def update(self):

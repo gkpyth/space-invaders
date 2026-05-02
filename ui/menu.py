@@ -22,8 +22,6 @@ class MenuScreen:
 
 
     def _draw_title(self):
-        title = "SPACE INVADERS"
-
         # Shadow layers
         shadow_colors = [
             (0, 20, 80),
@@ -35,12 +33,12 @@ class MenuScreen:
 
         for i, color in enumerate(shadow_colors):
             offset = len(shadow_colors) - i
-            surface = self.font_title.render(title, True, color)
+            surface = self.font_title.render(TITLE, True, color)
             rect = surface.get_rect(center=(SCREEN_WIDTH // 2 + offset, SCREEN_HEIGHT // 3 + offset))
             self.screen.blit(surface, rect)
 
         # Top layer brightest white-blue
-        top = self.font_title.render(title, True, (200, 230, 255))
+        top = self.font_title.render(TITLE, True, (200, 230, 255))
         rect = top.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 3))
         self.screen.blit(top, rect)
 

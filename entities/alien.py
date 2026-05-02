@@ -19,22 +19,11 @@ class Alien(pygame.sprite.Sprite):
     def _get_type(self):
         if self.row == 0:
             return "top"
-        elif self.row in (1,2):
+        elif self.row in (1, 2):
             return "middle"
         else:
             return "bottom"
 
-
-    def _get_color(self):
-        colors = {
-            "top": CYAN,
-            "middle": GREEN,
-            "bottom": WHITE
-        }
-        return colors[self.alien_type]
-
-
-    # TODO: Implement Alien movement in wave_manager.py
-    # Wave_manager will handle Alien movement, not individual aliens.
+    # Movement handled by WaveManager — individual aliens do not move themselves
     def update(self):
         pass

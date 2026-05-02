@@ -1,4 +1,3 @@
-import pygame
 import random
 
 from settings import *
@@ -14,7 +13,6 @@ class WaveManager:
         self.direction = 1          # 1 = right, -1 = left
         self.shoot_timer = 0
         self.dropping = False
-        self.drop_timers = {}       # row index: frames waited
         self.drop_cooldown = 0
 
         self._apply_level_config(1)
@@ -41,10 +39,10 @@ class WaveManager:
 
     def _spawn_wave(self, drop_in=False):
         # Define spacing between aliens
-        x_spacing = 70
-        y_spacing = 55
-        x_start = 100
-        y_start = 80
+        x_spacing = ALIEN_X_SPACING
+        y_spacing = ALIEN_Y_SPACING
+        x_start = ALIEN_X_START
+        y_start = ALIEN_Y_START
 
         self.dropping = drop_in
         self.grid_x = float(x_start)        # Track float position for whole grid
@@ -107,10 +105,8 @@ class WaveManager:
             # Move float position and apply to rects
             self.grid_x += self.speed * self.direction
             offset = int(self.grid_x)
-            x_start = 100
-            x_spacing = 70
             for alien in self.aliens:
-                alien.rect.x = x_start + alien.col * x_spacing + offset
+                alien.rect.x = ALIEN_X_START + alien.col * ALIEN_Y_SPACING + offset
 
 
     def on_alien_killed(self):

@@ -186,14 +186,14 @@ class Game:
         if pygame.sprite.spritecollide(self.player, self.alien_bullets, True):
             self.sound_manager.play("player_hit")
             self.player.take_hit()
-            if self.player.lives <= 0:
+            if self.player.lives <= 0 and self.state == "playing":
                 self.sound_manager.play("game_over")
                 self.score_manager.save(self.score)
                 self.state = "game_over"
 
         # Aliens reach the player
         for alien in self.aliens:
-            if alien.rect.bottom >= self.player.rect.top:
+            if alien.rect.bottom >= self.player.rect.top and self.state == "playing":
                 self.sound_manager.play("game_over")
                 self.score_manager.save(self.score)
                 self.state = "game_over"
@@ -205,11 +205,10 @@ class Game:
                 sprite.kill()
             for sprite in self.player_bullets.sprites():
                 sprite.kill()
+            self.sound_manager.play("level_complete")
             if self.level >= TOTAL_LEVELS:
-                self.sound_manager.play("level_complete")
                 self.state = "win"
             else:
-                self.sound_manager.play("level_complete")
                 self.level_complete_timer = 0
                 self.state = "level_complete"
 

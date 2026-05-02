@@ -20,7 +20,6 @@ class Player(pygame.sprite.Sprite):
         self.hit_flash = False
         self.flash_timer = 0
         self.flash_duration = 40    # 40 frames
-        self.original_image = self.image.copy()
 
 
     def update(self):
@@ -46,7 +45,7 @@ class Player(pygame.sprite.Sprite):
 
     def shoot(self):
         if self.can_shoot:
-            self.can_shoot=False
+            self.can_shoot = False
             self.shoot_cooldown = 20
             return True
         return False
@@ -70,4 +69,4 @@ class Player(pygame.sprite.Sprite):
     def take_hit(self):
         self.lives -= 1
         self.hit_flash = True
-        self.flash_timer =0
+        self.flash_timer = 0

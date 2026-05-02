@@ -24,14 +24,15 @@ PLAYER_BULLET_SPEED = 10
 PLAYER_LIVES = 3
 
 
-# --- Alien ---
+# --- Aliens ---
 ALIEN_ROWS = 4
 ALIEN_COLS = 11
-ALIEN_SPEED_INITIAL = 1
 ALIEN_SPEED_INCREMENT = 0.1
 ALIEN_DROP_DISTANCE = 20
-ALIEN_SHOOT_INTERVAL = 60
-ALIEN_BULLET_SPEED = 5
+ALIEN_X_START = 100
+ALIEN_X_SPACING = 70
+ALIEN_Y_START = 80
+ALIEN_Y_SPACING = 55
 
 
 # --- Shield ---
@@ -44,6 +45,7 @@ SCORE_PER_ALIEN = {
     "middle": 20,
     "bottom": 10,
 }
+SCORE_FILE = "data/highscore.json"
 
 # --- Assets ---
 PLAYER_SPRITE = "assets/images/player_spaceship.png"
@@ -70,4 +72,3 @@ LEVELS = {
 }
 TOTAL_LEVELS = 3
 WARP_DURATION = 120
-DROP_DELAY = 40

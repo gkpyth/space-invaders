@@ -11,7 +11,7 @@ class Explosion(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
 
-        self.lifetime = 10      # visible for 20 frames
+        self.lifetime = 10      # visible for 10 frames
         self.timer = 0
 
 

@@ -1,7 +1,6 @@
 import json
 import os
-
-SCORE_FILE = "data/highscore.json"
+from settings import SCORE_FILE
 
 class ScoreManager:
     def __init__(self):
@@ -20,7 +19,3 @@ class ScoreManager:
             self.high_score = score
             with open(SCORE_FILE, "w") as f:
                 json.dump({"high_score": self.high_score}, f)
-
-
-    def is_new_record(self, score):
-        return score > self.high_score

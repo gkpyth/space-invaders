@@ -3,8 +3,6 @@ from settings import *
 
 class SoundManager:
     def __init__(self):
-        pygame.mixer.init()
-
         # Sound Effects
         self.sounds = {
             "shoot": pygame.mixer.Sound(SOUND_SHOOT),

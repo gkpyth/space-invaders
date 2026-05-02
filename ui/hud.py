@@ -5,7 +5,6 @@ class HUD:
     def __init__(self, screen):
         self.screen = screen
         self.font_large = pygame.font.SysFont("monospace", 36, bold=True)
-        self.font_medium = pygame.font.SysFont("monospace", 36, bold=True)
         self.font_small = pygame.font.SysFont("monospace", 24)
 
 
@@ -23,17 +22,17 @@ class HUD:
 
 
     def _draw_score(self, score):
-        text = self.font_small.render(f"Score: {score}", True, WHITE)
+        text = self.font_small.render(f"SCORE: {score}", True, WHITE)
         self.screen.blit(text, (20, 15))
 
 
     def _draw_lives(self, lives):
-        text = self.font_small.render(f"Lives: {lives}", True, WHITE)
+        text = self.font_small.render(f"LIVES: {lives}", True, WHITE)
         self.screen.blit(text, (SCREEN_WIDTH - 150, 15))
 
 
-    def _draw_high_score(self, high_Score):
-        text = self.font_small.render(f"BEST: {high_Score}", True, YELLOW)
+    def _draw_high_score(self, high_score):
+        text = self.font_small.render(f"BEST: {high_score}", True, YELLOW)
         rect = text.get_rect(centerx=SCREEN_WIDTH // 2, top=15)
         self.screen.blit(text, rect)
 
@@ -48,7 +47,7 @@ class HUD:
         overlay.fill((0, 0, 0, 100))
         self.screen.blit(overlay, (0, 0))
 
-        text = self.font_medium.render(f"LEVEL {level} COMPLETE!", True, CYAN)
+        text = self.font_large.render(f"LEVEL {level} COMPLETE!", True, CYAN)
         rect = text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
         self.screen.blit(text, rect)
 
